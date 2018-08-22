@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self, capacidade_max, qtd_clientes, inercia = 1.0, fator_cognitivo = 0.6, fator_social = 0.4):
+    def __init__(self, capacidade_max, qtd_clientes, inercia = 0.6, fator_cognitivo = 0.6, fator_social = 0.4):
         from .funcoesGerais import geraEstado
         from copy import deepcopy
 
@@ -16,9 +16,10 @@ class Particle:
         self.pbest_fitness = int(1e9)
 
         self.gbest = deepcopy(self.posicao)
+        self.gbest_fitness = int(1e9)
 
     def updateVelocidade(self):
-        import random
+        import random, numpy as np
         random_1 = random.random()
         random_2 = random.random()
 
@@ -26,27 +27,35 @@ class Particle:
                         + self.fator_cognitivo * random_1 * (self.pbest - self.posicao)\
                         + self.fator_social * random_2 * (self.gbest - self.posicao)
 
+        self.velocidade = np.clip(self.velocidade, -5, 5)
     def updatePosicao(self, matriz_distancias, demanda_clientes):
+        from copy import deepcopy
+        import numpy as np
         self.posicao += self.velocidade
+        self.posicao = np.clip(self.posicao, -7, 7)
         fitness = self.calcFitness(matriz_distancias, demanda_clientes)
         if(fitness < self.pbest_fitness):
             self.pbest_fitness = fitness
-            self.pbest = self.posicao
+            self.pbest = deepcopy(self.posicao)
 
-    def calcFitness(self, matriz_distancias, demanda_clientes):
+    def calcFitness(self, matriz_distancias, demanda_clientes, posicao2 = None):
         vet = []
-        for i in range(self.qtd_clientes):
-            vet.append((self.posicao[i], i))
-        vet.sort(key = lambda x: x[0])
+        if(posicao2 is None):
+            for i in range(self.qtd_clientes):
+                vet.append((self.posicao[i], i + 1))
+        else:
+            for i in range(self.qtd_clientes):
+                vet.append((posicao2[i], i + 1))
+        vet.sort(key = lambda x: x[0], reverse = True)
         fitness, qtd_atual = 0, 0
         seq = [0]
         for data in vet:
-            if(data[0] + qtd_atual > self.capacidade_max):
+            if(demanda_clientes[data[1] - 1] + qtd_atual > self.capacidade_max):
                 fitness += matriz_distancias[seq[-1]][0]
                 seq = [0]
                 qtd_atual = 0
             fitness += matriz_distancias[seq[-1]][data[1]]
-            qtd_atual += demanda_clientes[data[1]]
+            qtd_atual += demanda_clientes[data[1] - 1]
             seq.append(data[1])
         fitness += matriz_distancias[seq[-1]][0]
         return fitness
@@ -63,5 +72,21 @@ class Particle:
                 self.pbest_fitness = fit
                 cnt = 0
             else:
-                self.posicao[f], self.posicao[s] = self.posicao[s], self.posicao[f]
                 cnt += 1
+                self.posicao[f], self.posicao[s] = self.posicao[s], self.posicao[f]
+    def OPT2_(self, matriz_distancias, demanda_clientes):
+        from copy import deepcopy
+        import numpy as np
+        flag = True
+        while(flag):
+            flag = False
+            for i in range(len(self.posicao)):
+                for j in range(i + 1, len(self.posicao)):
+                    new_route = deepcopy(self.posicao[:i])
+                    new_route = np.concatenate([new_route, self.posicao[i:j][::-1]])
+                    new_route = np.concatenate([new_route, self.posicao[j:]])
+                    fit = self.calcFitness(matriz_distancias, demanda_clientes, new_route)
+                    if(fit < self.pbest_fitness):
+                        self.pbest = deepcopy(new_route)
+                        self.pbest_fitness = fit
+                        flag = True

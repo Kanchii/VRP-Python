@@ -29,3 +29,33 @@ def geraEstado(menor, maior, qtd):
     diff = maior - menor
     vet = np.random.random((1, qtd))[0] * diff + menor
     return vet
+
+def printGraph(posicao, gbest, qtd_clientes, demanda_clientes, capacidade_max):
+    import networkx as nx
+    import matplotlib.pyplot as plt
+
+    G = nx.Graph()
+    for i in range(qtd_clientes + 1):
+        G.add_node(i, pos = (posicao[i][0], posicao[i][1]))
+    vet = []
+    for i in range(qtd_clientes):
+        vet.append((gbest[i], i + 1))
+    vet.sort(key = lambda x: x[0], reverse = True)
+    qtd_atual = 0
+    seq = [0]
+    idx = 1
+    for data in vet:
+        if(demanda_clientes[data[1] - 1] + qtd_atual > capacidade_max):
+            seq.append(0)
+            print("Rota #{}: {}".format(idx, seq))
+            idx += 1
+            G.add_path(seq)
+            seq = [0]
+            qtd_atual = 0
+        qtd_atual += demanda_clientes[data[1] - 1]
+        seq.append(data[1])
+    seq.append(0)
+    print("Rota #{}: {}".format(idx, seq))
+    G.add_path(seq)
+    nx.draw(G, posicao, with_labels = True)
+    plt.show()
