@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self, capacidade_max, qtd_clientes, inercia = 0.6, fator_cognitivo = 0.6, fator_social = 0.4):
+    def __init__(self, capacidade_max, qtd_clientes, inercia = 1, fator_cognitivo = 0.4, fator_social = 0.6):
         from .funcoesGerais import geraEstado
         from copy import deepcopy
 
@@ -9,7 +9,7 @@ class Particle:
         self.fator_cognitivo = fator_cognitivo
         self.fator_social = fator_social
 
-        self.posicao = geraEstado(-5.0, 5.0, self.qtd_clientes)
+        self.posicao = geraEstado(-7.0, 7.0, self.qtd_clientes)
         self.velocidade = geraEstado(-3.0, 3.0, self.qtd_clientes)
 
         self.pbest = deepcopy(self.posicao)
@@ -27,12 +27,12 @@ class Particle:
                         + self.fator_cognitivo * random_1 * (self.pbest - self.posicao)\
                         + self.fator_social * random_2 * (self.gbest - self.posicao)
 
-        self.velocidade = np.clip(self.velocidade, -5, 5)
+        self.velocidade = np.clip(self.velocidade, -3, 3)
     def updatePosicao(self, matriz_distancias, demanda_clientes):
         from copy import deepcopy
         import numpy as np
         self.posicao += self.velocidade
-        self.posicao = np.clip(self.posicao, -7, 7)
+        self.posicao = np.clip(self.posicao, -10, 10)
         fitness = self.calcFitness(matriz_distancias, demanda_clientes)
         if(fitness < self.pbest_fitness):
             self.pbest_fitness = fitness
