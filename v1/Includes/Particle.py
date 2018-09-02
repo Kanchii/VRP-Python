@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self, capacidade_max, qtd_clientes, inercia = 1, fator_cognitivo = 0.6, fator_social = 0.4):
+    def __init__(self, capacidade_max, qtd_clientes, inercia = 1, fator_cognitivo = 0.4, fator_social = 0.7):
         from .funcoesGerais import geraEstado
         from copy import deepcopy
 
@@ -60,6 +60,26 @@ class Particle:
         fitness += matriz_distancias[seq[-1]][0]
         return fitness
 
+    def getRoutes(self, matriz_distancias, demanda_clientes):
+        vet = []
+        for i in range(self.qtd_clientes):
+            vet.append((self.posicao[i], i + 1))
+        vet.sort(key = lambda x: x[0], reverse = True)
+        qtd_atual = 0
+        seq = [0]
+        routes = []
+        for data in vet:
+            if(demanda_clientes[data[1] - 1] + qtd_atual > self.capacidade_max):
+                seq.append(0)
+                routes.append(seq)
+                seq = [0]
+                qtd_atual = 0
+            qtd_atual += demanda_clientes[data[1] - 1]
+            seq.append(data[1])
+        seq.append(0)
+        routes.append(seq)
+        return routes
+
     def OPT2(self, qtd, matriz_distancias, demanda_clientes):
         import random, copy
         cnt = 0
@@ -91,27 +111,54 @@ class Particle:
                         self.pbest_fitness = fit
                         flag = True
 
-    def OPT2_X(self, matriz_distancias, demanda_clientes):
+    def calcFitnessOneRoute(self, route, matriz_distancias):
+        fit = 0
+        for i in range(1, len(route)):
+            fit += matriz_distancias[route[i - 1]][route[i]]
+        return fit
+
+    def OPT2_X(self, matriz_distancias, demanda_clientes, id, pos):
         import random, copy
+        import networkx as nx
+        import matplotlib.pyplot as plt
+
         flag = True
-        while(flag):
-            flag = False
-            for i in range(self.qtd_clientes - 2):
-                for j in range(self.qtd_clientes - 2):
-                    if(abs(i - j) < 2): continue
-                    p1,p2 = i, i + 1
-                    q1,q2 = j, j + 1
-                    self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q1], self.posicao[p2], self.posicao[q2]
-                    fit = self.calcFitness(matriz_distancias, demanda_clientes)
-                    if(fit < self.pbest_fitness):
-                        self.pbest = copy.deepcopy(self.posicao)
-                        self.pbest_fitness = fit
-                        flag = True
-                    else:
-                        self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q1], self.posicao[p2], self.posicao[q2]
-                        self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q2], self.posicao[q1], self.posicao[p2]
-                        fit = self.calcFitness(matriz_distancias, demanda_clientes)
-                        if(fit < self.pbest_fitness):
-                            self.pbest = copy.deepcopy(self.posicao)
-                            self.pbest_fitness = fit
+        routes = self.getRoutes(matriz_distancias, demanda_clientes)
+        tot = 0
+        for route in routes:
+            actualFit = self.calcFitnessOneRoute(route, matriz_distancias)
+            flag = True
+            # if(id == 0):
+            #     print(route)
+            #     G = nx.Graph()
+            #     G.add_node(0, pos = (pos[0][0], pos[0][1]))
+            #     for i in range(1, len(route) - 1):
+            #         G.add_node(route[i], pos = (pos[route[i]][0], pos[route[i]][1]))
+            #     G.add_path(route)
+            #     nx.draw(G, pos, with_labels = True)
+            #     plt.show()
+            while(flag):
+                flag = False
+                for i in range(len(route) - 1):
+                    for j in range(i + 2, len(route) - 1):
+                        if(i == j or j + 1 == i + 1): continue
+                        route[i + 1], route[j] = route[j], route[i + 1]
+                        fit = self.calcFitnessOneRoute(route, matriz_distancias)
+                        if(fit < actualFit):
+                            # print("Trocado {}-{} {}-{} por {}-{} {}-{}".format(route[i], route[j], route[i + 1], route[j + 1], route[i], route[i + 1], route[j], route[j + 1]))
+                            actualFit = fit
+                            self.posicao[route[i + 1] - 1], self.posicao[route[j] - 1] = self.posicao[route[j] - 1], self.posicao[route[i + 1] - 1]
                             flag = True
+                        else:
+                            route[i + 1], route[j] = route[j], route[i + 1]
+            # if(id == 0):
+            #     print(route)
+            #     G = nx.Graph()
+            #     G.add_node(0, pos = (pos[0][0], pos[0][1]))
+            #     for i in range(1, len(route) - 1):
+            #         G.add_node(route[i], pos = (pos[route[i]][0], pos[route[i]][1]))
+            #     G.add_path(route)
+            #     nx.draw(G, pos, with_labels = True)
+            #     plt.show()
+            tot += actualFit
+        # print("Tot:", tot)
