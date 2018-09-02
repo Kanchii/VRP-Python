@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self, capacidade_max, qtd_clientes, inercia = 1, fator_cognitivo = 0.4, fator_social = 0.6):
+    def __init__(self, capacidade_max, qtd_clientes, inercia = 1, fator_cognitivo = 0.6, fator_social = 0.4):
         from .funcoesGerais import geraEstado
         from copy import deepcopy
 
@@ -32,7 +32,7 @@ class Particle:
         from copy import deepcopy
         import numpy as np
         self.posicao += self.velocidade
-        self.posicao = np.clip(self.posicao, -10, 10)
+        self.posicao = np.clip(self.posicao, -7, 7)
         fitness = self.calcFitness(matriz_distancias, demanda_clientes)
         if(fitness < self.pbest_fitness):
             self.pbest_fitness = fitness
@@ -90,3 +90,28 @@ class Particle:
                         self.pbest = deepcopy(new_route)
                         self.pbest_fitness = fit
                         flag = True
+
+    def OPT2_X(self, matriz_distancias, demanda_clientes):
+        import random, copy
+        flag = True
+        while(flag):
+            flag = False
+            for i in range(self.qtd_clientes - 2):
+                for j in range(self.qtd_clientes - 2):
+                    if(abs(i - j) < 2): continue
+                    p1,p2 = i, i + 1
+                    q1,q2 = j, j + 1
+                    self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q1], self.posicao[p2], self.posicao[q2]
+                    fit = self.calcFitness(matriz_distancias, demanda_clientes)
+                    if(fit < self.pbest_fitness):
+                        self.pbest = copy.deepcopy(self.posicao)
+                        self.pbest_fitness = fit
+                        flag = True
+                    else:
+                        self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q1], self.posicao[p2], self.posicao[q2]
+                        self.posicao[p1], self.posicao[p2], self.posicao[q1], self.posicao[q2] = self.posicao[p1], self.posicao[q2], self.posicao[q1], self.posicao[p2]
+                        fit = self.calcFitness(matriz_distancias, demanda_clientes)
+                        if(fit < self.pbest_fitness):
+                            self.pbest = copy.deepcopy(self.posicao)
+                            self.pbest_fitness = fit
+                            flag = True

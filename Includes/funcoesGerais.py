@@ -1,5 +1,6 @@
 def eucDist(pos_1, pos_2):
-    return (((pos_1[0] - pos_2[0])**2 + (pos_1[1] - pos_2[1])**2) ** (0.5))
+    import math
+    return math.sqrt(math.pow(pos_1[0] - pos_2[0], 2) + math.pow(pos_1[1] - pos_2[1], 2))
 
 def init_Instancia(path):
     arq = open(path, 'r')

@@ -3,16 +3,16 @@ from Includes.Particle import Particle
 from copy import deepcopy
 
 ''' Constantes '''
-MAX_PARTICLES = 20
+MAX_PARTICLES = 10
 
 if __name__ == '__main__':
-    capacidade_max, qtd_clientes, demanda_clientes, maxi_caminhoes, posicoes, matriz_distancias = init_Instancia("Entradas/entrada_1")
+    capacidade_max, qtd_clientes, demanda_clientes, maxi_caminhoes, posicoes, matriz_distancias = init_Instancia("Entradas/entrada_2")
     particles = []
 
     for _ in range(MAX_PARTICLES):
         particles.append(Particle(capacidade_max, qtd_clientes))
 
-    for k in range(100000):
+    for k in range(50000):
         gbest = None
         bestFit = 1e9
         for i in range(MAX_PARTICLES):
@@ -25,10 +25,14 @@ if __name__ == '__main__':
             for i in range(MAX_PARTICLES):
                 particles[i].gbest = deepcopy(best)
                 particles[i].gbest_fitness = bestFit
-        if(k % 250 == 0):
+        if(k and k % 100000 == 0):
+            for i in range(MAX_PARTICLES):
+                print("i: {} | {}".format(i + 1, particles[i].velocidade))
+        if(k % 500 == 0):
            for i in range(MAX_PARTICLES):
-               particles[i].OPT2(25, matriz_distancias, demanda_clientes)
-        if(k % 100 == 0):
+               particles[i].OPT2_X(matriz_distancias, demanda_clientes)
+               # particles[i].OPT2_X(matriz_distancias, demanda_clientes)
+        if(k % 1000 == 0):
             print(k, bestFit)
 
     printGraph(posicoes, particles[0].gbest, qtd_clientes, demanda_clientes, capacidade_max)
