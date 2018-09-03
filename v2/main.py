@@ -3,8 +3,8 @@ from Includes.Particle import Particle
 from copy import deepcopy as dp
 
 ''' Constantes '''
-MAX_PARTICLES = 10
-MAX_ITERACAO = 100000
+MAX_PARTICLES = 20
+MAX_ITERACAO = 10000
 
 if __name__ == '__main__':
     capacidade_max, qtd_clientes, demanda_clientes, maxi_caminhoes, posicoes, matriz_distancias = init_Instancia("Entradas/entrada_1")
@@ -20,38 +20,38 @@ if __name__ == '__main__':
         particles[i].gbest = dp(tmp)
 
     # print("GBest comeco:", particles[0].gbest.fitness)
-
+    ant = -1
     for i in range(MAX_ITERACAO + 1):
-        best = dp(particles[0].pbest)
+        mudancaGBest = False
         for j in range(MAX_PARTICLES):
             particles[j].updateVelocidade()
             particles[j].updatePosicao()
-
-            # if(j == 0):
-            #     print("Antes|\nPosicao: {}\nPBest: {}\n".format(particles[j].posicao.fitness, particles[j].pbest.fitness))
-            #     printGraph(posicoes, qtd_clientes, particles[j].posicao.routes)
-
-            # if(j == 0):
-            #     print("Depois|\nPosicao: {}\nPBest: {}\n".format(particles[j].posicao.fitness, particles[j].pbest.fitness))
-            #     printGraph(posicoes, qtd_clientes, particles[j].posicao.routes)
-            particles[j].updatePBest()
-        if(i % 50 == 0):
+            mudancaGBest = mudancaGBest or particles[j].updatePBest()
+        if(i % 25 == 0):
             for j in range(MAX_PARTICLES):
-                particles[j].OPT_Inter(j, posicoes)
-                particles[j].updatePBest()
+                particles[j].OPT_Pos_Inter(j, posicoes)
+                particles[j].OPT_Pos_Intra(j, posicoes)
+                particles[j].OPT_Pos_Rand(j, posicoes)
+                mudancaGBest = mudancaGBest or particles[j].updatePBest()
+
+        if(i % 500 == 0):
+            for j in range(MAX_PARTICLES):
+                mudancaGBest = mudancaGBest or particles[j].OPT_PBest_Intra(j, posicoes)
+                mudancaGBest = mudancaGBest or particles[j].OPT_PBest_Rand(j, posicoes)
+                # mudancaGBest = mudancaGBest or particles[j].updatePBest()
+
         if(i % 100 == 0):
-            for j in range(MAX_PARTICLES):
-                particles[j].OPT_Intra(j, posicoes)
-                particles[j].updatePBest()
-        # if(i % 250 == 0):
-        #     print("Iteracao #{} | Fitness: {}".format(i, particles[0].gbest.fitness))
-        #     printGraph(posicoes, qtd_clientes, particles[0].gbest.routes)
-        if(i % 250 == 0):
             print("Iteracao #{} | Fitness: {}".format(i, particles[0].gbest.fitness))
-        for j in range(MAX_PARTICLES):
-            if(particles[j].pbest.fitness < best.fitness):
-                best = dp(particles[j].pbest)
-        for j in range(MAX_PARTICLES):
-            particles[j].gbest = dp(best)
+        if(particles[0].gbest.fitness != ant):
+            print("Iteracao #{} | Fitness: {}".format(i, particles[0].gbest.fitness))
+            ant = particles[0].gbest.fitness
+            printGraph(posicoes, qtd_clientes, particles[0].gbest.routes)
+        if(mudancaGBest):
+            best = dp(particles[0].pbest)
+            for j in range(MAX_PARTICLES):
+                if(particles[j].pbest.fitness < best.fitness):
+                    best = dp(particles[j].pbest)
+            for j in range(MAX_PARTICLES):
+                particles[j].gbest = dp(best)
     print("Iteracao #{} | Fitness: {}".format(i, particles[0].gbest.fitness))
     printGraph(posicoes, qtd_clientes, particles[0].gbest.routes)
