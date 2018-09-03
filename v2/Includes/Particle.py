@@ -9,7 +9,7 @@ class Particle:
         # print(self.pbest.fitness, self.posicao.fitness)
         self.gbest = None
 
-        self.fator_cognitivo = 2.0
+        self.fator_cognitivo = 1.5
         self.fator_social = 4.1 - self.fator_cognitivo
         self.w = 1.0
 
