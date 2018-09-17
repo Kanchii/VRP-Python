@@ -10,7 +10,7 @@ MAX_ITERACOES = 5000
 if __name__ == '__main__':
     start = time.time()
     time.clock()
-    capacidade_max, qtd_clientes, demanda_clientes, maxi_caminhoes, posicoes, matriz_distancias = init_Instancia("Entradas/entrada-5")
+    capacidade_max, qtd_clientes, demanda_clientes, maxi_caminhoes, posicoes, matriz_distancias = init_Instancia("Entradas/entrada-1")
     particles = []
     lastTime = 0
     lastIte = 0
@@ -57,6 +57,7 @@ if __name__ == '__main__':
                 #     tempo = time.time() - start
                 #     print("Iteracao #{} | Tempo: {:.5f}s | Fitness: {}".format(i, tempo, particles[0].gbest.fitness))
                 if(particles[0].gbest.fitness != ant):
+                    print(particles[0].posicao.psoRoute)
                     tempo = time.time() - start
                     lastTime = tempo
                     lastIte = i

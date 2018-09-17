@@ -4,12 +4,12 @@ class Particle:
         from copy import deepcopy as dp
 
         self.posicao = Rota(capacidade_max, matriz_distancias, demanda_clientes, posicoes)
-        self.velocidade = self.newRandVector(-100000, 100000, len(demanda_clientes))
+        self.velocidade = self.newRandVector(-10, 10, len(demanda_clientes))
         self.pbest = dp(self.posicao)
         # print(self.pbest.fitness, self.posicao.fitness)
         self.gbest = None
 
-        self.fator_cognitivo = 1.5
+        self.fator_cognitivo = 2.05
         self.fator_social = 4.1 - self.fator_cognitivo
         self.w = 1.0
 
@@ -32,12 +32,12 @@ class Particle:
         self.velocidade = K * (self.velocidade\
                         + self.fator_cognitivo * random_1 * (self.pbest.psoRoute - self.posicao.psoRoute)\
                         + self.fator_social * random_2 * (self.gbest.psoRoute - self.posicao.psoRoute))
-        self.velocidade = np.clip(self.velocidade, -100000, 100000)
+        self.velocidade = np.clip(self.velocidade, -10, 10)
 
     def updatePosicao(self):
         from copy import deepcopy as dp
         self.posicao.psoRoute += self.velocidade
-        self.posicao.clipRoute(-100000, 100000)
+        self.posicao.clipRoute(-10, 10)
         self.posicao.geraRotas()
         # if(self.posicao.fitness < self.pbest.fitness):
         #     print("oi")

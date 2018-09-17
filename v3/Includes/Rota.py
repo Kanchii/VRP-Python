@@ -6,7 +6,7 @@ class Rota:
         self.posicoes = posicoes
 
         self.routes = []
-        self.psoRoute = self.newRandVector(-100000, 100000)
+        self.psoRoute = self.newRandVector(-10, 10)
         self.fitness = 0
         self.geraRotas()
 
