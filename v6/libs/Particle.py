@@ -16,8 +16,8 @@ class Particle:
         self.minVelCliente = -100000
         self.maxVelCliente = +100000
 
-        self.minPosVeiculo = 15
-        self.maxPosVeiculo = 80
+        self.minPosVeiculo = 0
+        self.maxPosVeiculo = 100
         self.minVelVeiculo = -10
         self.maxVelVeiculo = 10
 
