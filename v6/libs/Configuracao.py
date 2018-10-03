@@ -46,8 +46,15 @@ class Configuracao:
                     break
         for i in range(Global.num_Veiculos):
             rotas[i].add(Global.deposito)
+            rotas[i].OPT_2()
         return rotas
     
+    def gera_Rotas_Ant(self):
+        import Global
+        from .Veiculo import Veiculo
+
+        
+
     def distancia(self, ponto_A, ponto_B):
         import math
 
