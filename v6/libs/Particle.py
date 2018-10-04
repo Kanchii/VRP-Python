@@ -8,8 +8,8 @@ class Particle:
         self.w_f = 0.1
         self.w = self.w_i
 
-        self.fator_Cognitivo = 2.0
-        self.fator_Social = 2.0
+        self.fator_Cognitivo = 1.5
+        self.fator_Social = 2.5
 
         self.minPosCliente = -100000
         self.maxPosCliente = +100000
