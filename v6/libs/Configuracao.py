@@ -5,7 +5,7 @@ class Configuracao:
         import Global
 
         self.conf = self.nova_Conf(minPosCliente, maxPosCliente, minPosVeiculo, maxPosVeiculo)
-        self.rotas = self.gera_Rotas()
+        self.rotas = self.gera_Rotas_Ant()
         self.fitness = self.calc_Fitness()
     
     def nova_Conf(self, minPosCliente, maxPosCliente,
@@ -46,8 +46,39 @@ class Configuracao:
                     break
         for i in range(Global.num_Veiculos):
             rotas[i].add(Global.deposito)
+            rotas[i].OPT_2()
         return rotas
     
+    def gera_Rotas_Ant(self):
+        import Global
+        from .Veiculo import Veiculo
+        rotas = []
+        conf_Clientes = self.conf[:Global.num_Clientes]
+
+        ordem_Clientes = []
+        for i in range(Global.num_Clientes):
+            ordem_Clientes.append((conf_Clientes[i], i))
+        ordem_Clientes.sort(key = lambda x: x[0])
+
+        veiculo_Atual = Veiculo(0)
+
+        for i in range(Global.num_Clientes):
+            indice_Cliente = ordem_Clientes[i][1]
+            if(not veiculo_Atual.quebra_Regra(Global.clientes[indice_Cliente])):
+                veiculo_Atual.add(Global.clientes[indice_Cliente])
+            else:
+                print(veiculo_Atual.tempo_Total + Global.clientes[indice_Cliente].tempo_Servico, Global.clientes[indice_Cliente].termina)
+                veiculo_Atual.add(Global.deposito)
+                veiculo_Atual.OPT_2()
+                rotas.append(veiculo_Atual)
+                veiculo_Atual = Veiculo(i)
+                veiculo_Atual.add(Global.clientes[indice_Cliente])
+        veiculo_Atual.add(Global.deposito)
+        veiculo_Atual.OPT_2()
+        rotas.append(veiculo_Atual)
+
+        return rotas
+
     def distancia(self, ponto_A, ponto_B):
         import math
 
@@ -69,5 +100,5 @@ class Configuracao:
         return matriz_Prioridade
     
     def update(self):
-        self.rotas = self.gera_Rotas()
+        self.rotas = self.gera_Rotas_Ant()
         self.fitness = self.calc_Fitness()

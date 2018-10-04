@@ -1,6 +1,7 @@
 from libs.LerArquivo import LerArquivo
 from libs.Particle import Particle
 from libs.Cliente import Cliente
+from libs.Graph import Graph
 import libs.Global as Global
 
 GBEST = None
@@ -16,13 +17,13 @@ def get_GBest(particles):
 
 def main():
     global NUM_PARTICLES, GBEST
-    
+
     NUM_ITERACOES = 1000
     num_Clientes = 25
-    
+
     NUM_PARTICLES = num_Clientes
 
-    num_Veiculos, capacidade, coords, demandas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TW/25C/C101.txt", num_Clientes)
+    num_Veiculos, capacidade, coords, demandas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TW/{}C/C101.txt".format(num_Clientes), num_Clientes)
 
     clientes = []
     for i in range(num_Clientes):
@@ -35,10 +36,10 @@ def main():
         particles.append(Particle())
 
     GBEST = get_GBest(particles)
-    
+
     for i in range(Global.NUM_PARTICLES):
         particles[i].set_GBest(GBEST)
-    
+
     for itera in range(Global.NUM_ITERACOES):
         update = False
         for i in range(Global.NUM_PARTICLES):
@@ -52,5 +53,10 @@ def main():
                 particles[i].set_GBest(GBEST)
             print("Iteracao #{}".format(itera))
             print("Melhor fitness: {}".format(particles[0].gbest.fitness))
+    
+    # for i, particle in enumerate(particles):
+    #     vel_Veiculo = particle.vel[Global.num_Clientes:]
+    #     print("Particle #{} = {}".format(i + 1, vel_Veiculo))
+    Graph().draw(GBEST.rotas)
 if __name__ == "__main__":
     main()
