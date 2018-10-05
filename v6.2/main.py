@@ -19,11 +19,11 @@ def main():
     global NUM_PARTICLES, GBEST
     try:
         NUM_ITERACOES = 1000
-        num_Clientes = 50
+        num_Clientes = 100
 
         NUM_PARTICLES = 100
 
-        num_Veiculos, capacidade, coords, demandas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TW/{}C/C102.txt".format(num_Clientes), num_Clientes)
+        num_Veiculos, capacidade, coords, demandas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TW/{}C/C101.txt".format(num_Clientes), num_Clientes)
 
         clientes = []
         for i in range(num_Clientes):

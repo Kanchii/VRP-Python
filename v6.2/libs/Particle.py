@@ -5,21 +5,21 @@ class Particle:
         import numpy as np
 
         self.w_i = 0.9
-        self.w_f = 0.1
+        self.w_f = 0.2
         self.w = self.w_i
 
-        self.fator_Cognitivo = 0.5
-        self.fator_Social = 0.5
+        self.fator_Cognitivo = 2
+        self.fator_Social = 2
 
         self.minPosCliente = -100000
         self.maxPosCliente = +100000
         self.minVelCliente = -100000
         self.maxVelCliente = +100000
 
-        self.minPosVeiculo = -100
-        self.maxPosVeiculo = 100
-        self.minVelVeiculo = -15
-        self.maxVelVeiculo = 15
+        self.minPosVeiculo = -300
+        self.maxPosVeiculo = 300
+        self.minVelVeiculo = -10
+        self.maxVelVeiculo = 10
 
         self.vel = np.array([random.uniform(self.minVelCliente, self.maxVelCliente) for _ in range(Global.num_Clientes)])
         for i in range(2 * Global.num_Veiculos):
