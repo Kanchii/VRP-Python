@@ -5,7 +5,7 @@ class Particle:
         import numpy as np
 
         self.w_i = 0.9
-        self.w_f = 0.2
+        self.w_f = 0.4
         self.w = self.w_i
 
         self.fator_Cognitivo = 2
@@ -18,8 +18,8 @@ class Particle:
 
         self.minPosVeiculo = -300
         self.maxPosVeiculo = 300
-        self.minVelVeiculo = -10
-        self.maxVelVeiculo = 10
+        self.minVelVeiculo = -30
+        self.maxVelVeiculo = 30
 
         self.vel = np.array([random.uniform(self.minVelCliente, self.maxVelCliente) for _ in range(Global.num_Clientes)])
         for i in range(2 * Global.num_Veiculos):

@@ -23,7 +23,7 @@ def main():
         num_Clientes = 25 if (len(sys.argv) == 1) else int(sys.argv[1])
         NUM_PARTICLES = 100
 
-        num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC101.txt".format(num_Clientes), num_Clientes)
+        num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC102.txt".format(num_Clientes), num_Clientes)
 
         clientes = []
         for i in range(num_Clientes):

@@ -1,7 +1,7 @@
 class Particula:
     def __init__(self, numClientes, capacidade, coords, demandas, timeWindow, matrizDistancia):
         import random, copy, numpy as np
-        from libs.Cliente import Cliente
+        from .Cliente import Cliente
 
         self.numClientes = numClientes
         self.numVeiculos = self.numClientes
@@ -115,7 +115,7 @@ class Particula:
         return False
 
     def geraRota(self, vetorPosicao = None):
-        from libs.Veiculo import Veiculo
+        from .Veiculo import Veiculo
 
         if(vetorPosicao is None):
             vetorPrioridadeClientes = self.geraVetorPrioridadeClientes()
@@ -193,7 +193,7 @@ class Particula:
         return fit
 
     def violaRegraOnly(self, rota):
-        from libs.Veiculo import Veiculo
+        from .Veiculo import Veiculo
 
         veiculo = Veiculo(0, self.capacidade)
         for i in range(1, len(rota) - 1):
