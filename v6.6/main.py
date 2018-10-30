@@ -1,3 +1,8 @@
+'''
+Implementacao do Multideposito
+'''
+
+
 from libs.LerArquivo import LerArquivo
 from libs.Particle import Particle
 from libs.Cliente import Cliente
@@ -20,16 +25,16 @@ def main():
     global NUM_PARTICLES, GBEST
     try:
         NUM_ITERACOES = 1000
-        num_Clientes = 25 if (len(sys.argv) == 1) else int(sys.argv[1])
+        # num_Clientes = 25 if (len(sys.argv) == 1) else int(sys.argv[1])
         NUM_PARTICLES = 100
 
-        num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC101.txt".format(num_Clientes), num_Clientes)
+        num_Veiculos, num_Depositos, num_Clientes, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/MDTWSPDH/lpr01")
 
         clientes = []
         for i in range(num_Clientes):
-            clientes.append(Cliente(coords[i + 1], i + 1, demandas[i + 1], coletas[i + 1], time_Window[i + 1]))
+            clientes.append(Cliente(coords[i], i, demandas[i], coletas[i], time_Window[i]))
 
-        Global.init(num_Veiculos, num_Clientes, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia, clientes, NUM_PARTICLES, NUM_ITERACOES)
+        Global.init(num_Veiculos, num_Clientes, num_Depositos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia, clientes, NUM_PARTICLES, NUM_ITERACOES)
 
         particles = []
         for i in range(Global.NUM_PARTICLES):
@@ -55,8 +60,8 @@ def main():
                 print("Iteracao #{}".format(itera))
                 print("Melhor fitness: {}".format(particles[0].gbest.fitness))
     finally:
-        # for l in GBEST.rotas:
-        #     print(' '.join([str(x.id) for x in l.clientes]))
+        for l in GBEST.rotas:
+            print(' '.join([str(x.id) for x in l.clientes]))
         Graph().draw(GBEST.rotas)
 if __name__ == "__main__":
     main()

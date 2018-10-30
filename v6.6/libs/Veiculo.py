@@ -1,10 +1,11 @@
 class Veiculo:
-    def __init__(self, id):
+    def __init__(self, id, idDeposito):
         import Global
 
-        self.clientes = [Global.deposito]
+        self.clientes = [Global.depositos[idDeposito]]
         self.fitness = 0
         self.id = id
+        self.idDeposito = idDeposito
         self.tempo_Total = 0
         self.carregando = 0
         self.custo = 0
@@ -40,7 +41,7 @@ class Veiculo:
             return True
         
         tempo_Viagem =  Global.matriz_Distancia[self.clientes[-1].id][cliente.id]
-        tempo_Viagem_Deposito = Global.matriz_Distancia[cliente.id][Global.deposito.id]
+        tempo_Viagem_Deposito = Global.matriz_Distancia[cliente.id][Global.depositos[self.idDeposito]]
 
         # Verificando se nao chega depois do limite do cliente
         if(self.tempo_Total + tempo_Viagem > cliente.termina):
@@ -48,10 +49,10 @@ class Veiculo:
         
         # Verificando se consegue ainda chegar no deposito
         if(self.tempo_Total + tempo_Viagem < cliente.comeca):
-            if(cliente.comeca + cliente.tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+            if(cliente.comeca + cliente.tempo_Servico + tempo_Viagem_Deposito > Global.depositos[self.idDeposito].termina):
                 return True
         else:
-            if(self.tempo_Total + tempo_Viagem + cliente.tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+            if(self.tempo_Total + tempo_Viagem + cliente.tempo_Servico + tempo_Viagem_Deposito > Global.depositos[self.idDeposito].termina):
                 return True
         
         return False
@@ -107,7 +108,7 @@ class Veiculo:
                     return -1
 
                 tempo_Viagem = Global.matriz_Distancia[self.clientes[i - 1].id][self.clientes[i].id]
-                tempo_Viagem_Deposito = Global.matriz_Distancia[self.clientes[i].id][Global.deposito.id]
+                tempo_Viagem_Deposito = Global.matriz_Distancia[self.clientes[i].id][Global.depositos[self.idDeposito].id]
 
                 # Verificando se nao chega depois do limite do cliente
                 if(tempo_Total + tempo_Viagem > self.clientes[i].termina):
@@ -115,10 +116,10 @@ class Veiculo:
 
                 # Verificando se consegue ainda chegar no deposito
                 if(tempo_Total + tempo_Viagem < self.clientes[i].comeca):
-                    if(self.clientes[i].comeca + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+                    if(self.clientes[i].comeca + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.depositos[self.idDeposito].termina):
                         return -1
                 else:
-                    if(tempo_Total + tempo_Viagem + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+                    if(tempo_Total + tempo_Viagem + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.depositos[self.idDeposito].termina):
                         return -1
 
                 carregando -= self.clientes[i].demanda
