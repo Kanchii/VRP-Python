@@ -1,0 +1,5 @@
+A ideia desse algoritmo vai ser:
+	- Criar um código que vai separar o problema em vários VRP's independentes
+	- Usar o código v6.5 para resolver as instancias geradas pelo algoritmo v7
+
+Este algoritmo estará resolvendo o problema MDSPDCVRPHTW
