@@ -23,7 +23,7 @@ def main():
         num_Clientes = 25 if (len(sys.argv) == 1) else int(sys.argv[1])
         NUM_PARTICLES = 100
 
-        num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC101.txt".format(num_Clientes), num_Clientes)
+        num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IR101.txt".format(num_Clientes), num_Clientes)
 
         clientes = []
         for i in range(num_Clientes):
@@ -52,8 +52,8 @@ def main():
                 GBEST = get_GBest(particles)
                 for i in range(Global.NUM_PARTICLES):
                     particles[i].set_GBest(GBEST)
-                print("Iteracao #{}".format(itera))
-                print("Melhor fitness: {}".format(particles[0].gbest.fitness))
+            print("Iteracao #{}".format(itera))
+            print("Melhor fitness: {}".format(particles[0].gbest.fitness))
     finally:
         # for l in GBEST.rotas:
         #     print(' '.join([str(x.id) for x in l.clientes]))
