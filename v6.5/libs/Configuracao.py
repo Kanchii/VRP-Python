@@ -1,11 +1,11 @@
 class Configuracao:
     def __init__(self, minPosCliente, maxPosCliente,
-                 minPosVeiculo, maxPosVeiculo):
+                 minPosVeiculo, maxPosVeiculo, perc):
         
         import Global
 
         self.conf = self.nova_Conf(minPosCliente, maxPosCliente, minPosVeiculo, maxPosVeiculo)
-        self.rotas = self.gera_Rotas_Artigo_Journal()
+        self.rotas = self.gera_Rotas_Artigo_Journal(perc)
         self.fitness = self.calc_Fitness()
     
     def nova_Conf(self, minPosCliente, maxPosCliente,
@@ -121,7 +121,7 @@ class Configuracao:
             rotas[i].OPT_2()
         return rotas
 
-    def gera_Rotas_Artigo_Journal(self):
+    def gera_Rotas_Artigo_Journal(self, perc):
         import Global
         from .Veiculo import Veiculo
 
@@ -144,7 +144,7 @@ class Configuracao:
                 if(tmp != -1):
                     # if(rotas[indice_Veiculo].fitness == 0): rotas[indice_Veiculo].fitness += Global.veiculos_Capacidades[indice_Veiculo][1]
                     rotas[indice_Veiculo].add_Artigo(Global.clientes[indice_Cliente], tmp)
-                    rotas[indice_Veiculo].OPT_2()
+                    rotas[indice_Veiculo].OPT_2(perc)
                     # rotas[indice_Veiculo].fitness += Global.veiculos_Capacidades[indice_Cliente][1]
                     break
         for i in range(Global.num_Veiculos):
@@ -173,6 +173,6 @@ class Configuracao:
                 matriz_Prioridade[i].append(key[1])
         return matriz_Prioridade
     
-    def update(self):
-        self.rotas = self.gera_Rotas_Artigo_Journal()
+    def update(self, perc):
+        self.rotas = self.gera_Rotas_Artigo_Journal(perc)
         self.fitness = self.calc_Fitness()

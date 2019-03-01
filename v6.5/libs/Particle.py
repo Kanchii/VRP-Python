@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self):
+    def __init__(self, perc):
         import copy, random
         import Global
         import numpy as np
@@ -16,7 +16,7 @@ class Particle:
         self.minVelCliente = -100000
         self.maxVelCliente = +100000
 
-        self.minPosVeiculo = -200
+        self.minPosVeiculo = -150
         self.maxPosVeiculo = 150
         self.minVelVeiculo = -10
         self.maxVelVeiculo = 10
@@ -24,16 +24,16 @@ class Particle:
         self.vel = np.array([random.uniform(self.minVelCliente, self.maxVelCliente) for _ in range(Global.num_Clientes)])
         for i in range(2 * Global.num_Veiculos):
             self.vel = np.append(self.vel, random.uniform(self.minVelVeiculo, self.maxVelVeiculo))
-        self.conf = self.nova_Rota(Global.clientes)
+        self.conf = self.nova_Rota(Global.clientes, perc)
 
         self.pbest = copy.deepcopy(self.conf)
         self.gbest = None
     
-    def nova_Rota(self, clientes):
+    def nova_Rota(self, clientes, perc):
         from .Configuracao import Configuracao
 
         conf = Configuracao(self.minPosCliente, self.maxPosCliente,
-                            self.minPosVeiculo, self.maxPosVeiculo)
+                            self.minPosVeiculo, self.maxPosVeiculo, perc)
         
         return conf
 
@@ -90,10 +90,10 @@ class Particle:
         
         self.ajusta_Posicao()
     
-    def update(self):
+    def update(self, perc):
         import copy
 
-        self.conf.update()
+        self.conf.update(perc)
         if(self.conf.fitness < self.pbest.fitness):
             self.pbest = copy.deepcopy(self.conf)
             if(self.pbest.fitness < self.gbest.fitness):

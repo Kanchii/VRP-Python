@@ -133,20 +133,22 @@ class Veiculo:
             return fitness
 
     # Heuristica de otimizacao local para refinamento da resposta
-    def OPT_2(self):
-        flag = True
+    def OPT_2(self, perc):
+		import random
+		flag = True
         # original = ' '.join([str(x.id) for x in self.clientes])
         # print("Original: {}".format(original))
-        while(flag):
-            flag = False
-            for i in range(1, len(self.clientes) - 2):
-                for j in range(1, len(self.clientes) - 2):
-                    if(abs(i - j) < 2): continue
-                    self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
-                    tmp = self.simula()
-                    if(tmp >= 0 and tmp < self.fitness):
-                        # print("Outra rota valida: {}".format(' '.join([str(x.id) for x in self.clientes])))
-                        self.fitness = tmp
-                        flag = True
-                    else:
-                        self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
+        #while(flag):
+		for k in range(20):
+			flag = False
+			for i in range(1, len(self.clientes) - 2):
+				for j in range(1, len(self.clientes) - 2):
+					if(abs(i - j) < 2): continue
+					self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
+					tmp = self.simula()
+					aux = random.uniform(0, 1)
+					if((tmp >= 0 and aux > perc) or (tmp >= 0 and tmp < self.fitness)):
+						self.fitness = tmp
+						flag = True
+					else:
+						self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
