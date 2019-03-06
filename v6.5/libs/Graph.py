@@ -16,6 +16,10 @@ class Graph:
                 path.append(cliente.id)
                 G.add_node(cliente.id, pos = cliente.pos)
             # print(path)
-            G.add_path(path)
-        nx.draw(G, Global.coords, with_labels = True)
-        plt.show()
+            for i in range(1, len(path)):
+                G.add_node(path[i - 1], path[i], color = 'b')
+            # G.add_path(path, weight = 10)
+        edges = G.edges()
+        colors = [G[u][v]['color'] for u, v in edges]
+        # nx.draw(G, pos = Global.coords, edges = edges, with_labels = True, edge_color = colors)
+        # plt.show()

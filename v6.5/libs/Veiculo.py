@@ -104,6 +104,7 @@ class Veiculo:
 
                 # Verificando regra de capacidade + P&D
                 if(carregando - self.clientes[i].demanda + self.clientes[i].coleta + pesoMorto > Global.veiculos_Capacidades[self.id][0]):
+                    # print("Estourou a capacidade")
                     return -1
 
                 tempo_Viagem = Global.matriz_Distancia[self.clientes[i - 1].id][self.clientes[i].id]
@@ -111,14 +112,17 @@ class Veiculo:
 
                 # Verificando se nao chega depois do limite do cliente
                 if(tempo_Total + tempo_Viagem > self.clientes[i].termina):
+                    # print("Estourou a janela de tempo")
                     return -1
 
                 # Verificando se consegue ainda chegar no deposito
                 if(tempo_Total + tempo_Viagem < self.clientes[i].comeca):
                     if(self.clientes[i].comeca + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+                        # print("Nao consigo voltar para o depot")
                         return -1
                 else:
                     if(tempo_Total + tempo_Viagem + self.clientes[i].tempo_Servico + tempo_Viagem_Deposito > Global.deposito.termina):
+                        # print("Tmb nao consigo voltar para o depot")
                         return -1
 
                 carregando -= self.clientes[i].demanda
@@ -134,21 +138,23 @@ class Veiculo:
 
     # Heuristica de otimizacao local para refinamento da resposta
     def OPT_2(self, perc):
-		import random
-		flag = True
-        # original = ' '.join([str(x.id) for x in self.clientes])
-        # print("Original: {}".format(original))
-        #while(flag):
-		for k in range(20):
-			flag = False
-			for i in range(1, len(self.clientes) - 2):
-				for j in range(1, len(self.clientes) - 2):
-					if(abs(i - j) < 2): continue
-					self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
-					tmp = self.simula()
-					aux = random.uniform(0, 1)
-					if((tmp >= 0 and aux > perc) or (tmp >= 0 and tmp < self.fitness)):
-						self.fitness = tmp
-						flag = True
-					else:
-						self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
+        import random
+        flag = True
+        for k in range(flag):
+            flag = False
+            for i in range(1, len(self.clientes) - 2):
+                for j in range(1, len(self.clientes) - 2):
+                    if(abs(i - j) < 2): continue
+                    self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
+                    tmp = self.simula()
+                    aux = random.uniform(0, 1)
+                    # if(tmp >= 0):
+                    #     print("Carai")
+                    if((tmp >= 0 and aux < perc) or (tmp >= 0 and tmp < self.fitness)):
+                        # if(tmp >= 0 and aux < perc):
+                        #     print("Aceitou solucao pior")
+                        print("oi")
+                        self.fitness = tmp
+                        flag = True
+                    else:
+                        self.clientes[i + 1], self.clientes[j] = self.clientes[j], self.clientes[i + 1]
