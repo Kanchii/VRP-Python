@@ -9,11 +9,11 @@ class Vehicle():
         self.fitness = 0
         self.carrying = 0
     
-    def get_Insertion_Cost(self, client, route, pos, _l_f, _l_if):
+    def get_Insertion_Cost(self, client, route, pos, _l_f, _l_if, tipo):
         alpha = 0.01
         beta = 0.95
         zr = self.cost
-        gama = 2.0
+        gama = 1.0
         c_0i = self.calc_Distance(route[0], client)
         c_ij = self.calc_Distance(client, route[pos-1])
         c_if = self.calc_Distance(client, route[pos])
@@ -23,31 +23,35 @@ class Vehicle():
 
         # print("L_F:", l_f, "L_IF:", l_if)
 
-        cost = (alpha * c_0i - beta * (c_ij + c_if - c_fj) * zr + (1 - beta) * (l_if - l_f) + 13) ** (gama)
+        cost = (alpha * c_0i - beta * (c_ij + c_if - c_fj) * zr + (1 - beta) * (l_if - l_f) + tipo * 13) ** (gama)
         return cost
 
     def insertion_Cost_Client(self, client):
         import copy
 
-        insertion_Cost = 2e9
+        insertion_Cost = -2e9
         insertion_Pos  = -1
-        self.carrying += client.delivery
 
         route_Copy = copy.deepcopy(self.route)
 
         for i in range(1, len(route_Copy)):
             _, time_Window_Before = self.simulate(route_Copy, pos = i)
-            route_Copy = route_Copy[:i] + [client] + route_Copy[i:]
-            fitness_New_Client, time_Window_After = self.simulate(route_Copy, pos = (i+1))
-            route_Copy = route_Copy[:i] + route_Copy[i+1:]
+            # route_Copy = route_Copy[:i] + [client] + route_Copy[i:]
+            self.carrying += client.delivery
+            # print("Tentando inserir o cliente {} na posicao {}".format(client.id, i))
+            fitness_New_Client, time_Window_After = self.simulate(route_Copy[:i] + [client] + route_Copy[i:], pos = (i+1))
+            self.carrying -= client.delivery
+            # route_Copy = route_Copy[:i] + route_Copy[i+1:]
             if(fitness_New_Client == -1):
+                # print("Tentei inserir em {} e deu ruim".format(i))
                 continue
             # cost = self.get_Insertion_Cost(client, route_Copy, i, time_Window_Before, time_Window_After)
-            cost = (fitness_New_Client - self.fitness) * self.cost
-            if(cost < insertion_Cost):
+            tipo = 1 if client.id >= 5 else 0
+            print(client.id, tipo)
+            cost = self.get_Insertion_Cost(client, route_Copy, i, time_Window_Before, time_Window_After, tipo)# (fitness_New_Client - self.fitness) * self.cost
+            if(cost > insertion_Cost):
                 insertion_Cost = cost
                 insertion_Pos = i
-        self.carrying -= client.delivery
         return insertion_Cost, insertion_Pos
     
     def add_Client(self, client, insertion_Position, insertion_Cost):
@@ -77,7 +81,7 @@ class Vehicle():
                     fit, _ = self.simulate(self.route)
                     if(fit != -1): print(fit, self.fitness)
                     if(fit >= 0 and fit < self.fitness):
-                        print("Serviu para alguma coisa")
+                        # print("Serviu para alguma coisa")
                         # self.route = copy.deepcopy(tmp)
                         self.fitness = fit
                         flag = True
@@ -96,7 +100,7 @@ class Vehicle():
                     fit, _ = self.simulate(self.route)
                     # print(fit, self.fitness)
                     if(fit >= 0 and fit < self.fitness):
-                        print("Serviu para alguma coisa 2")
+                        # print("Serviu para alguma coisa 2")
                         self.fitness = fit
                         flag = True
                     else:
@@ -132,6 +136,8 @@ class Vehicle():
                 time_Window = clients[i].time_Window[0] + clients[i].service_Time
             else:
                 time_Window = time_Window + distance + clients[i].service_Time
+            # print("Time_Window:", time_Window, "range:", i)
+        # print("Carai homi!")
         return fitness, time_Window_Reached
     
     def print_Route(self, rota = -1, print_ID = 0):

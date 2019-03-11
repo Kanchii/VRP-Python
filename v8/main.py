@@ -1,6 +1,7 @@
 from libs.Particle import Particle
 from libs.Read_File import Read_File
 import libs.Global as Global
+import math
 
 def update_GBest(particles):
     import copy
@@ -13,9 +14,10 @@ def update_GBest(particles):
 
 def main():
     try:
-        num_Clients, clients, vehicles = Read_File().read_File("In/TWSPD/100C/IC101.txt", "In/In_Veiculos")
+        # num_Clients, clients, vehicles = Read_File().read_File("In/TWSPD/25C/IC101.txt", "In/In_Veiculos")
+        num_Clients, clients, vehicles = Read_File().read_File("In/aleatorio", "In/In_Veiculos")
 
-        Global._init(_num_Clients = num_Clients, _MAX_PARTICLES = 50, _MAX_ITERATION = 1000, _clients = clients, _vehicles = vehicles)
+        Global._init(_num_Clients = num_Clients, _MAX_PARTICLES = int(math.ceil(num_Clients / 10.0)), _MAX_ITERATION = 1, _clients = clients, _vehicles = vehicles)
 
         # print("oi1")
         particles = []

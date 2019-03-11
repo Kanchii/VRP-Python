@@ -41,22 +41,22 @@ class State():
         if(only_Route == 0):
             self.fitness = 0
             self.fitness_No_Cost = 0
-
+        actual_configuration = [(0, 5), (0, 1), (0, 3), (0, 2), (0, 4)]
         for (_, client_index) in actual_configuration:
             client = Global.clients[client_index]
 
-            best_choice = (-1, -1, 1e9)
+            best_choice = (-1, -1, -1e9)
             for i, vehicle in enumerate(vehicles):
                 insertion_Cost, insertion_Position = vehicle.insertion_Cost_Client(client)
-                # print(client_index, insertion_Cost)
-                if(insertion_Cost < best_choice[2]):
+                # print("Vehicle: {} | insertion_Cost: {} | insertion_Position: {}".format(i, insertion_Cost, insertion_Position))
+                if(insertion_Cost > best_choice[2]):
                     best_choice = (i, insertion_Position, insertion_Cost)
             if(best_choice[0] == -1):
                 if(only_Route == 0):
                     self.fitness += 1e9
                     self.fitness_No_Cost += 1e9
             else:
-                # print(client_index, best_choice[2])
+                print(client_index, best_choice[0], best_choice[2])
                 vehicles[best_choice[0]].add_Client(client, best_choice[1], best_choice[2])
         if(only_Route == 0):
             for i, vehicle in enumerate(vehicles):

@@ -11,9 +11,9 @@ class Particle():
 
         self.w   = 0.9
         self.w_i = 0.9
-        self.w_f = 0.3
-        self.c_1 = 2
-        self.c_2 = 2
+        self.w_f = 0.1
+        self.c_1 = 1.5
+        self.c_2 = 2.5
 
         self.position = State(self.lower_Bound_Pos, self.upper_Bound_Pos)
         self.velocity = [0] * Global.num_Clients
