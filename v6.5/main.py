@@ -23,9 +23,9 @@ def main():
 	num_Clientes = 100
 	NUM_PARTICLES = 100
 	# try:
-	for arq in range(1, 11):
-		with open("C101_{}".format(arq), "w") as file:
-			num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC101.txt".format(num_Clientes), num_Clientes)
+	for arq in range(10):
+		with open("C102/IC102_{}.txt".format(arq), "w") as file:
+			num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC102.txt".format(num_Clientes), num_Clientes)
 
 			clientes = []
 			for i in range(num_Clientes):
@@ -43,7 +43,8 @@ def main():
 				particles[i].set_GBest(GBEST)
 			
 			print("Fitness atual: {}".format(GBEST.fitness))
-
+			anterior = -1
+			contador = 0
 			for itera in range(Global.NUM_ITERACOES):
 				update = False
 				for i in range(Global.NUM_PARTICLES):
@@ -60,14 +61,30 @@ def main():
 					GBEST = get_GBest(particles)
 					for i in range(Global.NUM_PARTICLES):
 						particles[i].set_GBest(GBEST)
-				file.write(str(itera) + " " + str(particles[0].gbest.fitness))
-				print("Iteracao #{}: {}".format(itera, particles[0].gbest.fitness))
+				qtd_Veiculos = sum([1 for x in GBEST.rotas if len(x.clientes) > 2])
+				file.write(str(itera) + ":" + str(particles[0].gbest.fitness) + ":" + str(qtd_Veiculos) + "\n")
+				print("Iteracao #{}: {} com {} veiculos".format(itera, particles[0].gbest.fitness, qtd_Veiculos))
+				if(particles[0].gbest.fitness <= 829.0):
+					break
+				if(particles[0].gbest.fitness == anterior):
+					contador += 1
+					if(contador >= 200):
+						particles = []
+						contador = 0
+						for i in range(Global.NUM_PARTICLES):
+							particles.append(Particle(1.0))
+						GBEST = get_GBest(particles)
+						for i in range(Global.NUM_PARTICLES):
+							particles[i].set_GBest(GBEST)
+				else:
+					contador = 0
+				anterior = particles[0].gbest.fitness
 			# print("Iteracao #{}".format(itera))
 			# print("Melhor fitness: {}".format(particles[0].gbest.fitness))
 
 	# finally:
-    #     # for l in GBEST.rotas:
-    #     #     print(' '.join([str(x.id) for x in l.clientes]))
+	# 	for l in GBEST.rotas:
+	# 		print(' '.join([str(x.id) for x in l.clientes]))
 	# 	Graph().draw(GBEST.rotas)
 if __name__ == "__main__":
     main()

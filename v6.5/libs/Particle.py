@@ -8,16 +8,16 @@ class Particle:
         self.w_f = 0.4
         self.w = self.w_i
 
-        self.fator_Cognitivo = 2
-        self.fator_Social = 2
+        self.fator_Cognitivo = 2.0
+        self.fator_Social = 2.0
 
         self.minPosCliente = -100000
         self.maxPosCliente = +100000
         self.minVelCliente = -100000
         self.maxVelCliente = +100000
 
-        self.minPosVeiculo = -200
-        self.maxPosVeiculo = 200
+        self.minPosVeiculo = -100
+        self.maxPosVeiculo = 125
         self.minVelVeiculo = -10
         self.maxVelVeiculo = 10
 

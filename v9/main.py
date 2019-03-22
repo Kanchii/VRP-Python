@@ -56,72 +56,42 @@ def runParticle(start, end, itera):
         particles[i].update_Position()
         change |= particles[i].update()
     return change
+
 def main():
     try:
-        # global particles
         num_Clients, num_Vehicles, clients, vehicles = Read_File().read_File("In/TWSPD/100C/IC101.txt", "In/In_Veiculos")
 
         Global._init(_num_Clients = num_Clients, _num_Vehicles = num_Vehicles, _MAX_PARTICLES = 100, _MAX_ITERATION = 1000, _clients = clients, _vehicles = vehicles)
+        for t in range(5):
+            anterior = -1
+            contador = 0
+            with open("IC_101_{}.txt".format(t + 1), "w") as file:
+                particles = []
 
-        # threads_2 = []
-        # thread_1 = threading.Thread(target = initParticle, args = (0, 24,))
-        # thread_1.start()
-        # thread_2 = threading.Thread(target=initParticle, args=(25, 49,))
-        # thread_2.start()
-        # thread_3 = threading.Thread(target = initParticle, args = (50, 74,))
-        # thread_3.start()
-        # thread_4 = threading.Thread(target=initParticle, args=(75, 99,))
-        # thread_4.start()
+                for i in range(Global.MAX_PARTICLES):
+                    particles.append(Particle())
 
-        # threads_2.append(thread_1)
-        # threads_2.append(thread_2)
-        # threads_2.append(thread_3)
-        # threads_2.append(thread_4)
-
-        particles = []
-
-        for i in range(Global.MAX_PARTICLES):
-            print("Criando Particula #{}".format(i + 1))
-            particles.append(Particle())
-        # for i in range(4):
-        #     threads_2[i].start()
-        # for i in range(4):
-        #     threads_2[i].join()
-
-        update_GBest(particles)
-        for i in range(Global.MAX_ITERATION):
-            time_start = time.time()
-            # threads = []
-            # thread_1 = threading.Thread(target=runParticle, args=(0, 24, i))
-            # thread_1.start()
-            # thread_2 = threading.Thread(target=runParticle, args=(25, 49, i))
-            # thread_2.start()
-            # thread_3 = threading.Thread(target=runParticle, args=(50, 74, i))
-            # thread_3.start()
-            # thread_4 = threading.Thread(target=runParticle, args=(75, 99, i))
-            # thread_4.start()
-
-            # threads.append(thread_1)
-            # threads.append(thread_2)
-            # threads.append(thread_3)
-            # threads.append(thread_4)
-            # for i in range(4):
-            #     threads[i].start()
-            # for j in range(4):
-            #     threads[j].join()
-            change = 0
-            for j in range(len(particles)):
-                particles[j].update_Velocity(i)
-                particles[j].update_Position()
-                change |= particles[j].update()
-            if(change):
                 update_GBest(particles)
-            time_end = time.time()
-            print("Time elapsed: {}".format(time_end - time_start))
-            print("Iteracao #{}: {} {}".format(i + 1, particles[0].gbest.fitness_No_Cost, particles[0].gbest.fitness))
-            print("-"*25)
+                for i in range(Global.MAX_ITERATION):
+                    change = 0
+                    for j in range(len(particles)):
+                        particles[j].update_Velocity(i)
+                        particles[j].update_Position()
+                        change |= particles[j].update()
+                    if(change):
+                        update_GBest(particles)
+                    print("Iteracao #{}: {}".format(i + 1, particles[0].gbest.fitness))
+                    file.write("{}:{}\n".format(i + 1, particles[0].gbest.fitness))
+                    if(particles[0].gbest.fitness <= 830.5):
+                        break
+                    if(particles[0].gbest.fitness == anterior):
+                        contador += 1
+                        if(contador >= 300):
+                            break
+                    else:
+                        contador = 0
+                    anterior = particles[0].gbest.fitness
     finally:
-        particles[0].gbest.show_VRP()
-
+        pass
 if __name__ == "__main__":
     main()

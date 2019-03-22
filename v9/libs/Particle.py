@@ -11,7 +11,7 @@ class Particle():
 
         self.w   = 0.9
         self.w_i = 0.9
-        self.w_f = 0.4
+        self.w_f = 0.3
         self.c_1 = 2.0
         self.c_2 = 2.0
 

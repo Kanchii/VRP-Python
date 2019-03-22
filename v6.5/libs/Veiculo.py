@@ -150,10 +150,9 @@ class Veiculo:
                     aux = random.uniform(0, 1)
                     # if(tmp >= 0):
                     #     print("Carai")
-                    if((tmp >= 0 and aux < perc) or (tmp >= 0 and tmp < self.fitness)):
+                    if(tmp >= 0 and tmp < self.fitness):
                         # if(tmp >= 0 and aux < perc):
                         #     print("Aceitou solucao pior")
-                        print("oi")
                         self.fitness = tmp
                         flag = True
                     else:

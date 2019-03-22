@@ -17,7 +17,7 @@ class Graph:
                 G.add_node(cliente.id, pos = cliente.pos)
             # print(path)
             for i in range(1, len(path)):
-                G.add_node(path[i - 1], path[i], color = 'b')
+                G.add_node(path[i - 1], path[i])
             # G.add_path(path, weight = 10)
         edges = G.edges()
         colors = [G[u][v]['color'] for u, v in edges]
