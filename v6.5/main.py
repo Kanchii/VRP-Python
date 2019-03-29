@@ -23,9 +23,9 @@ def main():
 	num_Clientes = 100
 	NUM_PARTICLES = 100
 	# try:
-	for arq in range(10):
-		with open("C102/IC102_{}.txt".format(arq), "w") as file:
-			num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC102.txt".format(num_Clientes), num_Clientes)
+	for arq in range(3):
+		with open("C202_Het/C202_Het_{}.txt".format(arq), "w") as file:
+			num_Veiculos, veiculos_Capacidades, coords, demandas, coletas, time_Window, matriz_Distancia = LerArquivo().readFile("In/TWSPD/{}C/IC202.txt".format(num_Clientes), num_Clientes)
 
 			clientes = []
 			for i in range(num_Clientes):
@@ -41,7 +41,7 @@ def main():
 
 			for i in range(Global.NUM_PARTICLES):
 				particles[i].set_GBest(GBEST)
-			
+
 			print("Fitness atual: {}".format(GBEST.fitness))
 			anterior = -1
 			contador = 0
@@ -64,7 +64,7 @@ def main():
 				qtd_Veiculos = sum([1 for x in GBEST.rotas if len(x.clientes) > 2])
 				file.write(str(itera) + ":" + str(particles[0].gbest.fitness) + ":" + str(qtd_Veiculos) + "\n")
 				print("Iteracao #{}: {} com {} veiculos".format(itera, particles[0].gbest.fitness, qtd_Veiculos))
-				if(particles[0].gbest.fitness <= 829.0):
+				if(particles[0].gbest.fitness <= 591.0):
 					break
 				if(particles[0].gbest.fitness == anterior):
 					contador += 1
