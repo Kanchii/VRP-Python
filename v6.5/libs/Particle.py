@@ -1,5 +1,5 @@
 class Particle:
-    def __init__(self, perc):
+    def __init__(self, perc, fc = 2, fs = 2):
         import copy, random
         import Global
         import numpy as np
@@ -8,8 +8,8 @@ class Particle:
         self.w_f = 0.4
         self.w = self.w_i
 
-        self.fator_Cognitivo = 2.0
-        self.fator_Social = 2.0
+        self.fator_Cognitivo = fc
+        self.fator_Social = fs
 
         self.minPosCliente = -100000
         self.maxPosCliente = +100000
