@@ -1,13 +1,12 @@
 from pathlib import Path
 import copy
 
-pastas = ["R201_Het"]
+pastas = ["C101_Het"]
 
 for pasta in pastas:
-    file_prefix = pasta[:4]
     all_datas = []
-    for i in range(10):
-        path = pasta + "/" + file_prefix + "_Het_" + str(i) + "_Ajustado.txt"
+    for i in range(11):
+        path = pasta + "/" + pasta + "_" + str(i) + "_Ajustado.txt"
         file = Path(path)
         if(not file.is_file()):
             continue
@@ -26,6 +25,6 @@ for pasta in pastas:
             tot += vetor[i]
         tot /= float(len(all_datas))
         vetor_media.append(tot)
-    with open(pasta + "/" + file_prefix + "_Het_Media.txt", "w") as f:
+    with open(pasta + "/" + pasta + "_Media.txt", "w") as f:
         for value in vetor_media:
             f.write(str(value) + "\n")

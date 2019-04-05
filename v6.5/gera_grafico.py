@@ -6,12 +6,11 @@ import plotly.graph_objs as go
 import plotly.io as pio
 import os
 
-pastas = ["R201_Het"]
-vetor_x = [x for x in range(1000)]
+pastas = ["C101_Het"]
+vetor_x = [x for x in range(100)]
 
 for pasta in pastas:
-    file_prefix = pasta[:4]
-    path = pasta + "/" + file_prefix + "_Het_Media.txt"
+    path = pasta + "/" + pasta + "_Media.txt"
     file = Path(path)
     if(not file.is_file()):
         break
@@ -35,4 +34,4 @@ for pasta in pastas:
     # py.offline.plot(fig)
     if not os.path.exists('images'):
         os.mkdir('images')
-    pio.write_image(fig, 'images/' + file_prefix + '_Het_Graph.png')
+    pio.write_image(fig, 'images/' + pasta + '_Graph.png')

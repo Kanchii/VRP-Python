@@ -1,12 +1,11 @@
 from pathlib import Path
 import copy
 
-pastas = ["R201_Het"]
+pastas = ["C101_Het"]
 
 for pasta in pastas:
-    file_prefix = pasta[:4]
-    for i in range(10):
-        path = pasta + "/" + file_prefix + "_Het_" + str(i) + ".txt"
+    for i in range(11):
+        path = pasta + "/" + pasta + "_" + str(i) + ".txt"
         file = Path(path)
         if(not file.is_file()):
             continue
@@ -38,6 +37,6 @@ for pasta in pastas:
                     best_sequence = copy.deepcopy(sequence)
             while(len(best_sequence) < 1000):
                 best_sequence.append(best_sequence[-1])
-        with open(pasta + "/" + file_prefix + "_Het_" + str(i) + "_Ajustado.txt", "w") as f:
+        with open(pasta + "/" + pasta + "_" + str(i) + "_Ajustado.txt", "w") as f:
             for par in best_sequence:
                 f.write(str(par[0]) + ":" + str(par[1]) + "\n")
