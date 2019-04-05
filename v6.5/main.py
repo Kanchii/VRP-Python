@@ -23,8 +23,8 @@ def main():
 	num_Clientes = 100
 	NUM_PARTICLES = 100
 
-	pastas = ["C101_Het_FC_1.95", "C101_Het_FC_2.05", "C101_Het_FC_1.5", "C101_Het_FC_2.5"]
-	valores = [(1.95, 2.05), (2.05, 1.95), (1.5, 2.5), (2.5, 1.5)]
+	pastas = ["C101_Het_FC_1.0", "C101_Het_FC_3.0", "C101_Het_FC_1.85", "C101_Het_FC_2.15"]
+	valores = [(1.0, 3.0), (3.0, 1.0), (1.85, 2.15), (2.15, 1.85)]
 	# try:
 	for (pasta, valor) in zip(pastas, valores):
 		for arq in range(0, 11):
