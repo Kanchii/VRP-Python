@@ -5,7 +5,7 @@ class Particle:
         import numpy as np
 
         self.w_i = 0.9
-        self.w_f = 0.4
+        self.w_f = 0.1
         self.w = self.w_i
 
         self.fator_Cognitivo = fc
